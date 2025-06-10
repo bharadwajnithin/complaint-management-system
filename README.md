@@ -39,7 +39,7 @@ src/
 - JSP (JavaServer Pages)
 - HTML/CSS
 - JavaScript
-- Database (MySQL/PostgreSQL)
+- Database (MySQL)
 
 ## Setup Instructions
 
@@ -48,6 +48,50 @@ src/
 3. Configure your database connection in the appropriate configuration files
 4. Deploy the application to a servlet container (e.g., Apache Tomcat)
 5. Access the application through your web browser
+
+## Database Configuration
+
+### Database Schema
+```sql
+CREATE DATABASE complaint_management;
+USE complaint_management;
+
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    role VARCHAR(20) DEFAULT 'USER',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE complaints (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    subject VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(20) DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+### Database Connection Properties
+Add the following properties to `src/main/resources/database.properties`:
+```properties
+db.url=jdbc:mysql://localhost:3306/complaint_management
+db.username=your_username
+db.password=your_password
+db.driver=com.mysql.cj.jdbc.Driver
+```
+
+## Admin Credentials
+Default admin credentials for first-time setup:
+- Username: admin
+- Password: admin123
+
+**Important**: Please change the default admin password after first login for security purposes.
 
 ## Usage
 
